@@ -15,7 +15,7 @@ from sqlalchemy.dialects.postgresql import UUID
 
 app = Flask(__name__)
 app.config[
-    'SQLALCHEMY_DATABASE_URI'] = 'postgres://jnasxtexwoezbw:40533f0ebf739a9985dee139359225c3f45ec775c433ef8ad663658ccc0247c4@ec2-3-215-118-246.compute-1.amazonaws.com:5432/df40iv88s8qt50'
+    'SQLALCHEMY_DATABASE_URI'] = 'postgres://yogbmkfomdkvzn:541952ff23bf0d574a51d047eb1b670aac8ef88280df4508ee56745cbd0698ca@ec2-3-222-11-129.compute-1.amazonaws.com:5432/deqv848dj3lcdf'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'S3cretH4sh'
 db = SQLAlchemy(app)
