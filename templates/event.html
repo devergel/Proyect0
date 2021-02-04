@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+  <title>Eventos</title>
+  <script type="text/javascript">
+  var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '')+'/';
+    function crear(){
+
+      window.location = full+"event/detail/";
+    }
+    function sendForm() {
+            $.ajax({
+                type: "GET",
+                url: full+"api/listevent",
+                beforeSend: function (xhr){
+                    xhr.setRequestHeader('Authorization', "Basic " + btoa("{{session['api_session_token']}}"+":"));
+                },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(data){
+                for (i = 0; i < data.length; i++) {
+                    div = document.getElementById("eventContainer");
+                    div.innerHTML +='<div class="eventContainer">';
+                    div.innerHTML += '<div class="col-12 col-sm-12 col-md-12 col-lg-12">';
+                    div.innerHTML +='<div class="row">';
+                    div.innerHTML += '<h4 class="nombreDeportista">';
+                    div.innerHTML +='<a href="/event/detail/'+data[i]["id"] +'">' + data[i]["name"] +' - '+ data[i]["category"] +'</a>';
+                    div.innerHTML +='</h4>';
+                    div.innerHTML +='</div>';
+                    div.innerHTML +='<div class="row centrar d-flex justify-content-center">';
+                    div.innerHTML +='<div class="">';
+                    div.innerHTML +='</div>';
+                    div.innerHTML +='</div>';
+                    div.innerHTML +='</div>';
+                    div.innerHTML +='</div>';
+                }
+                },
+                error: function(errMsg) {
+                    alert("Se presentó un error al consultar el listado de eventos");
+                    window.location = full;
+                }
+            });
+            return false;
+        }
+  </script>
+</head>
+
+<body onload="sendForm()">
+  <div class="container-fluid contenedorNav">
+    <div class="row">
+      <h1 class="col-0 col-sm-0 col-md-8 col-lg-8">Eventos</h1>
+      <div class="container centrar">
+    <h3>Listado Eventos</h3>
+        <button type="button" class="btn btn-danger float-right mr-1 mt-4 px-5" onclick="crear()"> Crear  </button>
+    <div id="eventContainer">
+    </div>
+
+    </div>
+  </div>
+    </div>
+  </div>
+</body>
+
+</html>

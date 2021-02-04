@@ -1,0 +1,191 @@
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+        <title>Evento</title>
+
+        <link href="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+        <script>
+        id = "{{id}}";
+        var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '')+'/';
+        function cancelar() {
+            window.location = full+"event";
+        }
+        function eliminar() {
+            $.ajax({
+                    type: "DELETE",
+                    url: full+"api/deleteevent/"+id,
+                    beforeSend: function (xhr){
+                        xhr.setRequestHeader('Authorization', "Basic " + btoa("{{session['api_session_token']}}"+":"));
+                    },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(data){
+                        alert("Evento Eliminado: " + $('#name').val());
+                        window.location = full+"event";
+                    },
+                    error: function(errMsg) {
+                        alert("Se presentó un error al eliminar el evento");
+                    }
+                });
+        }
+        function load() {
+            if (id != 'None'){
+                $.ajax({
+                    type: "GET",
+                    url: full+"api/event/"+id,
+                    beforeSend: function (xhr){
+                        xhr.setRequestHeader('Authorization', "Basic " + btoa("{{session['api_session_token']}}"+":"));
+                    },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(data){
+                        $('#name').val(data["name"]);
+                        $('#category').val(data["category"]);
+                        $('#place').val(data["place"]);
+                        $('#address').val(data["address"]);
+                        $('#begin_date').val(data["begin_date"]);
+                        $('#end_date').val(data["end_date"]);
+                        if (data["is_virtual"]){
+                           document.getElementById('is_virtual').checked = true;
+                        }
+
+                    },
+                    error: function(errMsg) {
+                        alert("Se presentó un error al consultar el evento");
+                        window.location = full+"event";
+                    }
+                });
+            }
+        }
+        function sendForm() {
+            json = { 'name': $('#name').val() , 'category': $('#category').val() ,
+                        'place': $('#place').val() , 'address': $('#address').val() , 'begin_date': $('#begin_date').val() ,
+                         'end_date': $('#end_date').val() , 'is_virtual': new Boolean(document.getElementById('is_virtual').checked) }
+            const removeEmptyOrNull = (obj) => {
+              Object.keys(obj).forEach(k =>
+                (obj[k] && typeof obj[k] === 'object') && removeEmptyOrNull(obj[k]) ||
+                (!obj[k] && obj[k] !== undefined) && delete obj[k]
+              );
+              return obj;
+            };
+            json_clean = removeEmptyOrNull(json);
+            if (id != 'None'){
+                $.ajax({
+                    type: "PUT",
+                    url: full+"api/updateevent/"+id,
+                    beforeSend: function (xhr){
+                        xhr.setRequestHeader('Authorization', "Basic " + btoa("{{session['api_session_token']}}"+":"));
+                    },
+                    data: JSON.stringify(json_clean),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(data){
+                        alert("Evento Actualizado: " + $('#name').val());
+                        window.location = full+"event";
+                    },
+                    error: function(errMsg) {
+                        alert("Se presentó un error al actualizar el evento");
+                        window.location = full+"event";
+                    }
+                });
+            }else{
+                $.ajax({
+                    type: "POST",
+                    url: full+"api/createevent",
+                    beforeSend: function (xhr){
+                        xhr.setRequestHeader('Authorization', "Basic " + btoa("{{session['api_session_token']}}"+":"));
+                    },
+                    data: JSON.stringify(json_clean),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(data){
+                        alert("Evento Creado: " + $('#name').val());
+                        window.location = full+"event";
+                    },
+                    error: function(errMsg) {
+                        alert("Se presentó un error al crear el evento");
+                    }
+                });
+            }
+            return false;
+        }
+    </script>
+
+    </head>
+    <body onload="load()">
+        <article class="card-body mx-auto h-100 d-flex flex-column justify-content-center">
+            <form class="shadow p-3 mb-5 bg-dark rounded" action="" method="POST" onsubmit="return sendForm();">
+                <div class="form-group text-white">
+                    <p class="text-center title" > <strong>Evento</strong> </p>
+                    {% if id %} {{id}} {% endif %}
+                </div>
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                    </div>
+                    <input class="form-control" placeholder="Nombre" type="text" id="name" required="true">
+                </div>
+
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                    </div>
+                    <select class="form-control" id="category">
+                      <option>Conferencia</option>
+                      <option>Seminario</option>
+                      <option>Congreso</option>
+                      <option>Curso</option>
+                    </select>
+
+                </div> 
+
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                    </div>
+                    <input name="place" class="form-control" placeholder="Lugar" type="text" id="place">
+                </div> 
+
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                    </div>
+                    <input name="" class="form-control" placeholder="Direccion" type="text" id="address">
+                </div>
+
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                    </div>
+                    <input name="" class="form-control" placeholder="Fecha Inicio" type="text" id="begin_date">
+                </div>
+
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                    </div>
+                    <input name="" class="form-control" placeholder="Fecha Fin" type="text" id="end_date">
+                </div>
+
+                <div class="form-check">
+                    <label class="form-check-label" for="is_virtual"><p>Es Virtual?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p></label>
+                    <input type="checkbox" class="form-check-input" id="is_virtual">
+                  </div>
+
+            
+                <div class="form-group">
+                    <button type="submit" class="btn-white btn ml-1 mt-4 px-5"> Guardar  </button>
+                    {% if id %}
+                    <button type="button" class="btn btn-danger float-right mr-1 mt-4 px-5" onclick="eliminar()"> Eliminar  </button>
+                    {% endif %}
+                    <button type="button" class="btn btn-danger float-right mr-1 mt-4 px-5" onclick="cancelar()"> Cancelar  </button>
+                </div>
+            </form>
+        </article>
+    </body>
+</html>

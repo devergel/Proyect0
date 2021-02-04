@@ -1,0 +1,98 @@
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+        <title>Registro</title>
+
+        <link href="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+        <script>
+        var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '')+'/';
+        function sendForm() {
+            if ($('#password').val() != $('#repeat_password').val()) {
+                alert('Las contraseñas no son iguales');
+                return false;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: full+"api/user/",
+                data: JSON.stringify({ 'username': $('#username').val() , 'first_name': $('#name').val() ,
+                    'last_name': $('#last_name').val() , 'password': $('#password').val() , 'email': $('#email').val() }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(data){
+                    alert("Usuario registrado: " + $('#username').val());
+                    window.location = full;
+                },
+                failure: function(errMsg) {
+                    alert("Se presentó un error al adicionar el usuario");
+                }
+            });
+            return false;
+        }
+    </script>
+
+    </head>
+    <body>
+        <article class="card-body mx-auto h-100 d-flex flex-column justify-content-center">
+            <form class="shadow p-3 mb-5 bg-dark rounded" action="" method="POST" onsubmit="return sendForm();">
+                <div class="form-group text-white">
+                    <p class="text-center title" > <strong>REGISTRO</strong> </p>
+                </div>
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                    </div>
+                    <input class="form-control" placeholder="Usuario" type="text" id="username" required="true">
+                </div>
+
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                    </div>
+                    <input class="form-control" placeholder="Crear contraseña" type="password" id="password" required="true">
+                </div>      
+
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                    </div>
+                    <input class="form-control" placeholder="Repetir contraseña" type="password" id="repeat_password" required="true">
+                </div>
+
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                    </div>
+                    <input name="" class="form-control" placeholder="Nombre" type="text" id="name">
+                </div> 
+
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                    </div>
+                    <input name="" class="form-control" placeholder="Apellido" type="text" id="last_name">
+                </div> 
+
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                    </div>
+                    <input name="" class="form-control" placeholder="Correo electrónico" type="email" id="email" required="true">
+                </div> 
+            
+                <div class="form-group">
+                    <button type="submit" class="btn-white btn ml-1 mt-4 px-5"> Registrar  </button>
+                    <button type="button" class="btn btn-danger float-right mr-1 mt-4 px-5" href="./register"> Cancelar  </button>
+                </div>    
+                <div class="form-group text-white">
+                    <p class="text-center">Tienes una cuenta? <strong><a  class="text-white" href = "./" id='login'>Logueate</a></strong> </p>
+                </div>                                                                        
+            </form>
+        </article>
+    </body>
+</html>
