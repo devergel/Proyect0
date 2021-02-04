@@ -7,3 +7,5 @@ flask-marshmallow
 psycopg2
 Flask-Script
 passlib
+gunicorn
+python-decouple
