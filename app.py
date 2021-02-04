@@ -19,7 +19,6 @@ app.config[
     'SQLALCHEMY_DATABASE_URI'] = 'postgres://yogbmkfomdkvzn:541952ff23bf0d574a51d047eb1b670aac8ef88280df4508ee56745cbd0698ca@ec2-3-222-11-129.compute-1.amazonaws.com:5432/deqv848dj3lcdf'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'S3cretH4sh'
-app.config.from_object(os.environ['APP_SETTINGS'])
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 api = Api(app)
