@@ -60,14 +60,14 @@ class User(db.Model):
         except SignatureExpired:
             return None  # valid token, but expired
         except BadSignature:
-            return None
+            return False
         user = User.query.get(data['id'])
         return user
 
 
-#@auth.error_handler
-#def auth_error():
-#    return 'Access Denied', 403
+@auth.error_handler
+def auth_error():
+    return 'Access Denied', 403
 
 
 class UserSchema(ma.Schema):
@@ -155,7 +155,7 @@ def verify_password(username_or_token, password):
 
 
 @app.route('/api/listevent', methods=['GET'])
-#@auth.login_required
+@auth.login_required
 def getEvents():
     events = Event.query.filter(Event.user_id == g.user.id).order_by(Event.creation_date.desc()).all()
     result = events_schema.dump(events)
@@ -163,7 +163,7 @@ def getEvents():
 
 
 @app.route('/api/createevent', methods=['POST'])
-#@auth.login_required
+@auth.login_required
 def postEvent():
     new_event = Event(
         name=request.json['name'],
@@ -181,14 +181,14 @@ def postEvent():
 
 
 @app.route('/api/event/<string:id_event>', methods=['GET'])
-#@auth.login_required
+@auth.login_required
 def getEventById(id_event):
     event = Event.query.get_or_404(id_event)
     return event_schema.dump(event)
 
 
 @app.route('/api/updateevent/<string:id_event>', methods=['PUT'])
-#@auth.login_required
+@auth.login_required
 def put(id_event):
     event = Event.query.get_or_404(id_event)
     if 'name' in request.json:
@@ -213,7 +213,7 @@ def put(id_event):
 
 
 @app.route('/api/deleteevent/<string:id_event>', methods=['DELETE'])
-#@auth.login_required
+@auth.login_required
 def delete(id_event):
     event = Event.query.get_or_404(id_event)
     db.session.delete(event)
@@ -239,6 +239,7 @@ def event():
 
 @app.route("/event/detail/<id>", methods=['PUT', 'GET'])
 @app.route("/event/detail/", methods=['POST', 'GET'])
+@auth.login_required
 def editEvent(id=None):
     return render_template("createevent.html", id=id)
 
