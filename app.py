@@ -3,7 +3,7 @@ import os
 import uuid
 
 import enum as enum
-from flask import Flask, jsonify, g, render_template, session
+from flask import Flask, jsonify, g, render_template, session, Blueprint
 from flask import request
 from flask_httpauth import HTTPBasicAuth
 from flask_marshmallow import Marshmallow
@@ -23,6 +23,11 @@ db = SQLAlchemy(app)
 ma = Marshmallow(app)
 api = Api(app)
 auth = HTTPBasicAuth()
+app = Blueprint("conf_manager",
+                __name__,
+                template_folder="templates",
+                static_folder="static",
+                static_url_path="")
 
 
 class User(db.Model):
