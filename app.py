@@ -242,13 +242,16 @@ def jquery():
 def bootstrap():
     return render_template("bootstrap.min.js")
 
+
 @app.route('/bootstrapstyles')
-def bootstrap():
+def bootstrapstyles():
     return render_template("bootstrap.min.css")
+
 
 @app.route('/all')
 def all():
     return render_template("all.css")
+
 
 if __name__ == '__main__':
     app.run(debug=True)
