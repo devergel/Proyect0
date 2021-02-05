@@ -60,14 +60,14 @@ class User(db.Model):
         except SignatureExpired:
             return None  # valid token, but expired
         except BadSignature:
-            return False
+            return None
         user = User.query.get(data['id'])
         return user
 
 
-@auth.error_handler
-def auth_error():
-    return 'Access Denied', 403
+#@auth.error_handler
+#def auth_error():
+#    return 'Access Denied', 403
 
 
 class UserSchema(ma.Schema):
@@ -232,6 +232,7 @@ def register():
 
 
 @app.route('/event')
+@auth.login_required
 def event():
     return render_template("event.html")
 
