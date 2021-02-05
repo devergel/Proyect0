@@ -233,7 +233,7 @@ def editEvent(id=None):
     return render_template("createevent.html", id=id)
 
 @app.route('/jquery', methods=['GET'])
-def event():
+def jquery():
     return render_template("jquery.min.js")
 
 if __name__ == '__main__':
