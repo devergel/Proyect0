@@ -3,7 +3,7 @@ flask-sqlalchemy
 flask-restful
 flask-marshmallow
 flask_httpauth
-psycopg2
+psycopg2==2.7.4
 Flask-Script
 passlib
 python-decouple
