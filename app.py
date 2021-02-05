@@ -14,7 +14,9 @@ from itsdangerous import (TimedJSONWebSignatureSerializer
 from passlib.apps import custom_app_context as pwd_context
 from sqlalchemy.dialects.postgresql import UUID
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="templates",
+            static_folder="static",
+            static_url_path="")
 app.config[
     'SQLALCHEMY_DATABASE_URI'] = 'postgres://yogbmkfomdkvzn:541952ff23bf0d574a51d047eb1b670aac8ef88280df4508ee56745cbd0698ca@ec2-3-222-11-129.compute-1.amazonaws.com:5432/deqv848dj3lcdf'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -23,11 +25,6 @@ db = SQLAlchemy(app)
 ma = Marshmallow(app)
 api = Api(app)
 auth = HTTPBasicAuth()
-app = Blueprint("conf_manager",
-                __name__,
-                template_folder="templates",
-                static_folder="static",
-                static_url_path="")
 
 
 class User(db.Model):
