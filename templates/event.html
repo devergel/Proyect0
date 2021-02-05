@@ -40,7 +40,7 @@
                 type: "GET",
                 url: full+"api/listevent",
                 beforeSend: function (xhr){
-                    xhr.setRequestHeader('Authorization', "Basic " + sessionStorage.getItem("api_session_token")+":");
+                    xhr.setRequestHeader('Authorization', "Basic " + btoa("{{session['api_session_token']}}"+":"));
                 },
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
