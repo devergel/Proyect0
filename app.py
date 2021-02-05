@@ -212,17 +212,17 @@ def delete(id_event):
     return '', 204
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def inicio():
     return render_template("login.html")
 
 
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     return render_template("register.html")
 
 
-@app.route('/event')
+@app.route('/event', methods=['GET', 'POST'])
 def event():
     return render_template("event.html")
 
