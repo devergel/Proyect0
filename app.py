@@ -233,7 +233,7 @@ def register():
 
 @app.route('/event')
 def event():
-    return render_template("event.html", token=g.user.username + ":" + g.user.password_hash)
+    return render_template("event.html")
 
 
 @app.route("/event/detail/<id>", methods=['PUT', 'GET'])
