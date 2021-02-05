@@ -6,7 +6,6 @@ flask_httpauth
 psycopg2==2.7.4
 Flask-Script
 passlib
-python-decouple
 Click==7.0
 Flask==1.1.1
 itsdangerous==1.1.0
