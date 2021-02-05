@@ -226,7 +226,7 @@ def register():
 
 @app.route('/event')
 def event():
-    return render_template("event.html", token=session['api_session_token'])
+    return render_template("event.html", token=g.user.username+":"+g.user.password_hash)
 
 
 @app.route("/event/detail/<id>", methods=['PUT', 'GET'])
