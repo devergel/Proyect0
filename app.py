@@ -23,7 +23,7 @@ db = SQLAlchemy(app)
 ma = Marshmallow(app)
 api = Api(app)
 auth = HTTPBasicAuth()
-
+HTTP_METHODS = ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH']
 
 class User(db.Model):
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True)
@@ -212,17 +212,17 @@ def delete(id_event):
     return '', 204
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=HTTP_METHODS)
 def inicio():
     return render_template("login.html")
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register', methods=HTTP_METHODS)
 def register():
     return render_template("register.html")
 
 
-@app.route('/event', methods=['GET', 'POST'])
+@app.route('/event', methods=HTTP_METHODS)
 def event():
     return render_template("event.html")
 
