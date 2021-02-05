@@ -10,7 +10,6 @@
     <script src="{{ url_for('static', filename='/bootstrap-4.3.1-dist/js/bootstrap.min.js') }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/fontawesome-free-5.15.2-web/css/all.css') }}"/>
   <title>Eventos</title>
-  <input type="hidden" id="variable_sesion" value="[llaves_php] echo $_SESSION['api_session_token'] [cierra_llaves]">
   <script type="text/javascript">
   var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '')+'/';
     function crear(){
@@ -40,7 +39,7 @@
                 type: "GET",
                 url: full+"api/listevent",
                 beforeSend: function (xhr){
-                    xhr.setRequestHeader('Authorization', "Basic " + btoa("{{session['api_session_token']}}".replace("b&#39;","")+":"));
+                    xhr.setRequestHeader('Authorization', "Basic " + btoa("{{token}}"+":"));
                 },
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
