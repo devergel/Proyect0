@@ -4,12 +4,10 @@
         <meta http-equiv='X-UA-Compatible' content='IE=edge'>
         <title>Registro</title>
 
-        <link href="/bootstrapstyles" rel="stylesheet" type="text/css"
-        id="bootstrap-css">
-    <script src="/bootstrap"></script>
-    <script src="/jquery"></script>
-
-    <link rel="stylesheet" href="/all" type="text/css" >
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/bootstrap-4.3.1-dist/css/bootstrap.min.css') }}" id="bootstrap-css"/>
+    <script src="{{url_for('static', filename='jquery.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='/bootstrap-4.3.1-dist/js/bootstrap.min.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/fontawesome-free-5.15.2-web/css/all.css') }}"/>
         <script>
         var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '')+'/';
         function sendForm() {
