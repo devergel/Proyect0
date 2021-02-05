@@ -18,9 +18,6 @@
             $.ajax({
                     type: "DELETE",
                     url: full+"api/deleteevent/"+id,
-                    beforeSend: function (xhr){
-                        xhr.setRequestHeader('Authorization', "Basic " + btoa({{session['api_session_token']}}+":"));
-                    },
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function(data){
@@ -37,9 +34,6 @@
                 $.ajax({
                     type: "GET",
                     url: full+"api/event/"+id,
-                    beforeSend: function (xhr){
-                        xhr.setRequestHeader('Authorization', "Basic " + btoa("{{session['api_session_token']}}"+":"));
-                    },
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function(data){
@@ -77,9 +71,6 @@
                 $.ajax({
                     type: "PUT",
                     url: full+"api/updateevent/"+id,
-                    beforeSend: function (xhr){
-                        xhr.setRequestHeader('Authorization', "Basic " + btoa("{{session['api_session_token']}}"+":"));
-                    },
                     data: JSON.stringify(json_clean),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -96,9 +87,6 @@
                 $.ajax({
                     type: "POST",
                     url: full+"api/createevent",
-                    beforeSend: function (xhr){
-                        xhr.setRequestHeader('Authorization', "Basic " + btoa("{{session['api_session_token']}}"+":"));
-                    },
                     data: JSON.stringify(json_clean),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
