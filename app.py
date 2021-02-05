@@ -3,7 +3,7 @@ import os
 import uuid
 
 import enum as enum
-from flask import Flask, jsonify, g, render_template, session, Blueprint
+from flask import Flask, jsonify, g, render_template, session, Blueprint, Request
 from flask import request
 from flask_httpauth import HTTPBasicAuth
 from flask_marshmallow import Marshmallow
@@ -25,6 +25,13 @@ db = SQLAlchemy(app)
 ma = Marshmallow(app)
 api = Api(app)
 auth = HTTPBasicAuth()
+
+
+def __call__(self, environ, start_response):
+    cookie = Request(environ).cookies.get('api_session_token')
+    if cookie is not None:
+        environ['HTTP_AUTHORIZATION'] = 'Basic ' + cookie
+    return self.app(environ, start_response)
 
 
 class User(db.Model):
@@ -226,7 +233,7 @@ def register():
 
 @app.route('/event')
 def event():
-    return render_template("event.html", token=g.user.username+":"+g.user.password_hash)
+    return render_template("event.html", token=g.user.username + ":" + g.user.password_hash)
 
 
 @app.route("/event/detail/<id>", methods=['PUT', 'GET'])
