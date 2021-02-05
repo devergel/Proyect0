@@ -159,7 +159,8 @@ def verify_password(username_or_token, password):
 def getEvents():
     events = Event.query.filter(Event.user_id == g.user.id).order_by(Event.creation_date.desc()).all()
     result = events_schema.dump(events)
-    return jsonify(result.data)
+    print(result)
+    return jsonify(result)
 
 
 @app.route('/api/createevent', methods=['POST'])
