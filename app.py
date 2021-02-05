@@ -229,30 +229,10 @@ def event():
     return render_template("event.html")
 
 
-@app.route("/event/detail/<id>")
-@app.route("/event/detail/")
+@app.route("/event/detail/<id>", methods=['PUT', 'GET'])
+@app.route("/event/detail/", methods=['POST', 'GET'])
 def editEvent(id=None):
     return render_template("createevent.html", id=id)
-
-
-@app.route('/jquery')
-def jquery():
-    return render_template("jquery.min.js")
-
-
-@app.route('/bootstrap')
-def bootstrap():
-    return render_template("bootstrap.min.js")
-
-
-@app.route('/bootstrapstyles')
-def bootstrapstyles():
-    return render_template("bootstrap.min.css")
-
-
-@app.route('/all')
-def all():
-    return render_template("all.css")
 
 
 if __name__ == '__main__':
