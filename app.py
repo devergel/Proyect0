@@ -137,7 +137,7 @@ def get_auth_token():
     token = g.user.generate_auth_token()
 
     # Put it in the session
-    session['api_session_token'] = token
+    session['api_user_id'] = g.user.id
     return jsonify({'token': token.decode('ascii')})
 
 
@@ -157,8 +157,8 @@ def verify_password(username_or_token, password):
 @app.route('/api/listevent', methods=['GET'])
 @auth.login_required
 def getEvents():
-    print(g.user.id)
-    events = Event.query.filter(Event.user_id == g.user.id).order_by(Event.creation_date.desc()).all()
+    print(session['api_user_id'])
+    events = Event.query.filter(Event.user_id == session['api_user_id']).order_by(Event.creation_date.desc()).all()
     result = events_schema.dump(events)
     print(result)
     return jsonify(result)
@@ -175,7 +175,7 @@ def postEvent():
         begin_date=request.json['begin_date'],
         end_date=request.json['end_date'],
         is_virtual=request.json['is_virtual'],
-        user_id=g.user.id
+        user_id=session['api_user_id']
     )
     db.session.add(new_event)
     db.session.commit()
