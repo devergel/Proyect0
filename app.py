@@ -157,6 +157,7 @@ def verify_password(username_or_token, password):
 @app.route('/api/listevent', methods=['GET'])
 @auth.login_required
 def getEvents():
+    print(g.user.id)
     events = Event.query.filter(Event.user_id == g.user.id).order_by(Event.creation_date.desc()).all()
     result = events_schema.dump(events)
     print(result)
