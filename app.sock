@@ -1,8 +1,0 @@
-[Unit]
-Description=app socket
-
-[Socket]
-ListenStream=/run/app.sock
-
-[Install]
-WantedBy=sockets.target
