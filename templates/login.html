@@ -16,6 +16,9 @@
             $.ajax({
                 type: "POST",
                 url: full+"api/token",
+                beforeSend: function (xhr){
+                    xhr.setRequestHeader('Authorization', "Basic " + btoa($('#user').val()+":"+$('#password').val()));
+                },
                 data: JSON.stringify({ 'username': $('#user').val(), 'password': $('#password').val() }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",

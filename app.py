@@ -3,9 +3,10 @@ import os
 import uuid
 
 import enum as enum
-from flask import Flask, jsonify, g, render_template, session, Blueprint, Request
+from flask import Flask, jsonify, g, render_template, session, Blueprint, Request, url_for
 from flask import request
 from flask_httpauth import HTTPBasicAuth
+from flask_login import LoginManager, login_user, confirm_login, UserMixin, login_required
 from flask_marshmallow import Marshmallow
 from flask_restful import Api, abort
 from flask_sqlalchemy import SQLAlchemy
@@ -13,6 +14,7 @@ from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
 from passlib.apps import custom_app_context as pwd_context
 from sqlalchemy.dialects.postgresql import UUID
+from werkzeug.utils import redirect
 
 app = Flask(__name__, template_folder="templates",
             static_folder="static",
@@ -26,6 +28,10 @@ ma = Marshmallow(app)
 api = Api(app)
 auth = HTTPBasicAuth()
 
+login_manager = LoginManager()
+login_manager.login_view = 'get_auth_token'
+login_manager.init_app(app)
+
 
 def __call__(self, environ, start_response):
     cookie = Request(environ).cookies.get('api_session_token')
@@ -34,7 +40,7 @@ def __call__(self, environ, start_response):
     return self.app(environ, start_response)
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True)
     username = db.Column(db.String(40), unique=True)
     first_name = db.Column(db.String(40))
@@ -133,10 +139,11 @@ def post():
 
 @app.route('/api/token', methods=['GET', 'POST', 'HEAD', 'OPTIONS'])
 def get_auth_token():
-    print('ENTRO')
-    print(g)
+    print(request.form)
     user = User.query.filter_by(username=request.json['username']).first()
-    if not user.verify_password(request.json['username'], request.json['password']):
+    if not user:
+        return 'Access Denied', 403
+    if not user.verify_password(request.json['password']):
         return 'Access Denied', 403
     g.user = user
 
@@ -144,7 +151,16 @@ def get_auth_token():
 
     # Put it in the session
     session['api_user_id'] = user.id
+    login_user(user, remember=True)
     return jsonify({'token': token.decode('ascii')})
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    # since the user_id is just the primary key of our user table, use it in the query for the user
+    print(user_id)
+    print(User.query.get(user_id))
+    return User.query.get(user_id)
 
 
 @auth.verify_password
@@ -161,25 +177,25 @@ def verify_password(username_or_token, password):
 
 
 @app.route('/api/listevent', methods=['GET'])
-@auth.login_required
+@login_required
 def getEvents():
     print(session['api_user_id'])
     events = Event.query.filter(Event.user_id == session['api_user_id']).order_by(Event.creation_date.desc()).all()
     result = events_schema.dump(events)
-    print(result)
+    print(jsonify(result))
     return jsonify(result)
 
 
 @app.route('/api/createevent', methods=['POST'])
-@auth.login_required
+@login_required
 def postEvent():
     new_event = Event(
         name=request.json['name'],
         category=request.json['category'],
         place=request.json['place'],
         address=request.json['address'],
-        begin_date=request.json['begin_date'],
-        end_date=request.json['end_date'],
+        begin_date=datetime.datetime.strptime(request.json['begin_date'], '%d/%m/%Y').date(),
+        end_date=datetime.datetime.strptime(request.json['end_date'], '%d/%m/%Y').date(),
         is_virtual=request.json['is_virtual'],
         user_id=session['api_user_id']
     )
@@ -189,14 +205,14 @@ def postEvent():
 
 
 @app.route('/api/event/<string:id_event>', methods=['GET'])
-@auth.login_required
+@login_required
 def getEventById(id_event):
     event = Event.query.get_or_404(id_event)
     return event_schema.dump(event)
 
 
 @app.route('/api/updateevent/<string:id_event>', methods=['PUT'])
-@auth.login_required
+@login_required
 def put(id_event):
     event = Event.query.get_or_404(id_event)
     if 'name' in request.json:
@@ -221,7 +237,7 @@ def put(id_event):
 
 
 @app.route('/api/deleteevent/<string:id_event>', methods=['DELETE'])
-@auth.login_required
+@login_required
 def delete(id_event):
     event = Event.query.get_or_404(id_event)
     db.session.delete(event)
@@ -239,15 +255,15 @@ def register():
     return render_template("register.html")
 
 
-@app.route('/event')
-@auth.login_required
+@app.route('/event', methods=['POST', 'GET', 'HEAD', 'OPTIONS'])
+@login_required
 def event():
     return render_template("event.html")
 
 
 @app.route("/event/detail/<id>", methods=['PUT', 'GET'])
 @app.route("/event/detail/", methods=['POST', 'GET'])
-@auth.login_required
+@login_required
 def editEvent(id=None):
     return render_template("createevent.html", id=id)
 
