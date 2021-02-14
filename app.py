@@ -132,7 +132,6 @@ def post():
 
 
 @app.route('/api/token', methods=['GET', 'POST'])
-@auth.login_required
 def get_auth_token():
     token = g.user.generate_auth_token()
 
