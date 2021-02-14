@@ -133,7 +133,7 @@ def post():
 
 @app.route('/api/token', methods=['GET', 'POST'])
 def get_auth_token():
-    if not g:
+    if not g.user:
         user = User.query.filter_by(username=request.json['username']).first()
         g.user = user
 
