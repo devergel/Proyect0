@@ -134,12 +134,11 @@ def post():
 @app.route('/api/token', methods=['GET', 'POST', 'HEAD', 'OPTIONS'])
 def get_auth_token():
     print('ENTRO')
-    if g.user is None:
-        print(g)
-        user = User.query.filter_by(username=request.json['username']).first()
-        if not user.verify_password(request.json['username'], request.json['password']):
-            return 'Access Denied', 403
-        g.user = user
+    print(g)
+    user = User.query.filter_by(username=request.json['username']).first()
+    if not user.verify_password(request.json['username'], request.json['password']):
+        return 'Access Denied', 403
+    g.user = user
 
     token = user.generate_auth_token()
 
