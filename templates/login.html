@@ -14,7 +14,7 @@
     var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '')+'/';
         function sendForm() {
             $.ajax({
-                type: "GET",
+                type: "POST",
                 url: full+"api/token",
                 data: JSON.stringify({ 'username': $('#user').val(), 'password': $('#password').val() }),
                 contentType: "application/json; charset=utf-8",
