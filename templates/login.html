@@ -14,12 +14,9 @@
     var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '')+'/';
         function sendForm() {
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: full+"api/token",
-                beforeSend: function (xhr){
-                    xhr.setRequestHeader('Authorization', "Basic " + btoa($('#user').val()+":"+$('#password').val()));
-                },
-                data: JSON.stringify({ 'username': $('#user').val() }),
+                data: JSON.stringify({ 'username': $('#user').val(), 'password': $('#password').val() }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function(data){

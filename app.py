@@ -65,8 +65,8 @@ class User(db.Model):
         return user
 
 
-#@auth.error_handler
-#def auth_error():
+# @auth.error_handler
+# def auth_error():
 #    return 'Access Denied', 403
 
 
@@ -131,16 +131,20 @@ def post():
     return post_schema.dump(newClient)
 
 
-@app.route('/api/token', methods=['GET', 'POST'])
+@app.route('/api/token', methods=['GET', 'POST', 'HEAD', 'OPTIONS'])
 def get_auth_token():
+    print('ENTRO')
     if g.user is None:
+        print(g)
         user = User.query.filter_by(username=request.json['username']).first()
+        if not user.verify_password(request.json['username'], request.json['password']):
+            return 'Access Denied', 403
         g.user = user
 
-    token = g.user.generate_auth_token()
+    token = user.generate_auth_token()
 
     # Put it in the session
-    session['api_user_id'] = g.user.id
+    session['api_user_id'] = user.id
     return jsonify({'token': token.decode('ascii')})
 
 
@@ -226,7 +230,7 @@ def delete(id_event):
     return '', 204
 
 
-@app.route('/')
+@app.route('/', methods=['POST', 'GET', 'HEAD', 'OPTIONS'])
 def inicio():
     return render_template("login.html")
 
