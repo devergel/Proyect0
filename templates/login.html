@@ -19,6 +19,7 @@
                 beforeSend: function (xhr){
                     xhr.setRequestHeader('Authorization', "Basic " + btoa($('#user').val()+":"+$('#password').val()));
                 },
+                data: JSON.stringify({ 'username': $('#user').val() }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function(data){
