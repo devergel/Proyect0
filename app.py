@@ -65,9 +65,9 @@ class User(db.Model):
         return user
 
 
-#@auth.error_handler
-#def auth_error():
-#    return 'Access Denied', 403
+@auth.error_handler
+def auth_error():
+    return 'Access Denied', 403
 
 
 class UserSchema(ma.Schema):
